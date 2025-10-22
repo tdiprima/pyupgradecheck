@@ -1,10 +1,9 @@
 from __future__ import annotations
+
 import json
-import sys
-import subprocess
-from typing import Dict, Optional, Tuple, List
-import urllib.request
 import urllib.error
+import urllib.request
+from typing import Dict, List, Optional, Tuple
 
 try:
     # py3.8+
@@ -12,17 +11,19 @@ try:
 except Exception:
     import importlib_metadata
 
-from packaging.specifiers import SpecifierSet
-from packaging.version import Version, InvalidVersion
-from packaging.specifiers import InvalidSpecifier
+from packaging.specifiers import InvalidSpecifier, SpecifierSet
+from packaging.version import InvalidVersion, Version
 
 PYPI_JSON_URL = "https://pypi.org/pypi/{pkg}/json"
+
 
 def get_installed_packages() -> Dict[str, str]:
     """Return mapping package_name -> version (from importlib.metadata)."""
     pkgs = {}
     for d in importlib_metadata.distributions():
-        name = d.metadata["Name"] if "Name" in d.metadata else d.metadata.get("name", None)
+        name = (
+            d.metadata["Name"] if "Name" in d.metadata else d.metadata.get("name", None)
+        )
         if not name:
             continue
         try:
@@ -31,6 +32,7 @@ def get_installed_packages() -> Dict[str, str]:
             ver = "unknown"
         pkgs[name] = ver
     return pkgs
+
 
 def fetch_pypi_requires_python(pkg: str, timeout: int = 5) -> Optional[str]:
     """Query PyPI JSON for requires_python string, return None on error."""
@@ -45,6 +47,7 @@ def fetch_pypi_requires_python(pkg: str, timeout: int = 5) -> Optional[str]:
     except Exception:
         return None
 
+
 def parse_requires_python(spec: Optional[str]) -> Optional[SpecifierSet]:
     if not spec:
         return None
@@ -53,7 +56,10 @@ def parse_requires_python(spec: Optional[str]) -> Optional[SpecifierSet]:
     except InvalidSpecifier:
         return None
 
-def check_pkg_compatibility(pkg: str, installed_version: str, target_python: str) -> Tuple[str, Optional[str]]:
+
+def check_pkg_compatibility(
+    pkg: str, installed_version: str, target_python: str
+) -> Tuple[str, Optional[str]]:
     """
     Returns (status, details)
     status in {"supported", "incompatible", "unknown"}
@@ -76,7 +82,9 @@ def check_pkg_compatibility(pkg: str, installed_version: str, target_python: str
         dist = importlib_metadata.distribution(pkg)
         classifiers = dist.metadata.get_all("Classifier") or []
         # look for 'Programming Language :: Python :: 3.10' pattern
-        py_classifiers = [c for c in classifiers if c.startswith("Programming Language :: Python ::")]
+        py_classifiers = [
+            c for c in classifiers if c.startswith("Programming Language :: Python ::")
+        ]
         if py_classifiers:
             # crude parse: if any classifier matches the major.minor of target -> supported
             for c in py_classifiers:
@@ -84,13 +92,19 @@ def check_pkg_compatibility(pkg: str, installed_version: str, target_python: str
                 ver = parts[-1].strip()
                 if ver == target_python or ver.startswith(target_python.split(".")[0]):
                     return ("supported", f"classifier: {c}")
-            return ("unknown", f"classifiers found but no exact match: {py_classifiers}")
+            return (
+                "unknown",
+                f"classifiers found but no exact match: {py_classifiers}",
+            )
     except importlib_metadata.PackageNotFoundError:
         pass
     # 3) unknown
     return ("unknown", "no metadata found")
 
-def check_environment(target_python: str, packages: Optional[List[str]] = None) -> Dict[str, Dict]:
+
+def check_environment(
+    target_python: str, packages: Optional[List[str]] = None
+) -> Dict[str, Dict]:
     pkgs = get_installed_packages()
     if packages:
         pkgs = {k: pkgs.get(k, "unknown") for k in packages}
