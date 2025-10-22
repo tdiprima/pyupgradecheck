@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import json
-import urllib.error
-import urllib.request
 from typing import Dict, List, Optional, Tuple
+
+import httpx
 
 try:
     from importlib import metadata as importlib_metadata
@@ -37,11 +37,12 @@ def fetch_pypi_requires_python(pkg: str, timeout: int = 5) -> Optional[str]:
     """Query PyPI JSON for requires_python string, return None on error."""
     url = PYPI_JSON_URL.format(pkg=pkg)
     try:
-        with urllib.request.urlopen(url, timeout=timeout) as resp:
-            data = json.load(resp)
-            info = data.get("info", {})
-            return info.get("requires_python")
-    except urllib.error.HTTPError:
+        response = httpx.get(url, timeout=timeout, follow_redirects=True)
+        response.raise_for_status()
+        data = response.json()
+        info = data.get("info", {})
+        return info.get("requires_python")
+    except httpx.HTTPStatusError:
         return None
     except Exception:
         return None
