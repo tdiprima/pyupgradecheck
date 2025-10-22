@@ -38,7 +38,7 @@ def main():
     if not args.json:
         spinner = Halo(
             text=f"Checking {num_packages} packages (estimated time: {time_msg})...",
-            spinner="dots"
+            spinner="dots",
         )
         spinner.start()
 
