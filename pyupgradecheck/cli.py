@@ -9,9 +9,9 @@ def main():
         prog="pyupgradecheck",
         description="Check installed packages for Python version compatibility.",
     )
-    p.add_argument("target", help="Target Python version (e.g. 3.11)")
+    p.add_argument("target", help="Target Python version (e.g. 3.13)")
     p.add_argument("--packages", "-p", nargs="+", help="Specific packages to check")
-    p.add_argument("--json", action="store_true", help="Emit json")
+    p.add_argument("--json", action="store_true", help="Emit json output")
     args = p.parse_args()
     report = check_environment(args.target, args.packages)
     if args.json:

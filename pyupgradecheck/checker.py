@@ -6,7 +6,6 @@ import urllib.request
 from typing import Dict, List, Optional, Tuple
 
 try:
-    # py3.8+
     from importlib import metadata as importlib_metadata
 except Exception:
     import importlib_metadata
@@ -68,7 +67,7 @@ def check_pkg_compatibility(
     req = fetch_pypi_requires_python(pkg)
     spec = parse_requires_python(req)
     if spec is not None:
-        # packaging accepts versions like '>=3.8'
+        # packaging accepts versions like '>=3.9'
         try:
             target_v = Version(target_python)
         except InvalidVersion:
