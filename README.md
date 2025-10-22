@@ -1,5 +1,8 @@
 # 🐍 pyupgradecheck
 
+[![PyPI](https://img.shields.io/pypi/v/pyupgradecheck.svg)](https://pypi.org/project/pyupgradecheck/)
+[![CI](https://github.com/tdiprima/pyupgradecheck/workflows/CI/badge.svg)](https://github.com/tdiprima/pyupgradecheck/actions)
+
 Quickly see which of your installed packages are ready for your next Python version.
 
 ### Example
