@@ -15,6 +15,14 @@ dependencies = [
   "halo",
   "httpx"
 ]
+keywords = ["python", "compatibility", "pypi", "upgrade", "cli", "dependency"]
+classifiers = [
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Utilities",
+  "Programming Language :: Python :: 3",
+  "Intended Audience :: Developers",
+  "Environment :: Console"
+]
 [project.scripts]
 pyupgradecheck = "pyupgradecheck.cli:main"
 
