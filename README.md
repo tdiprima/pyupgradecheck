@@ -24,8 +24,8 @@ pyupgradecheck 3.13 --packages packaging httpx halo
 ```
 
 ```sh
-# JSON output
-pyupgradecheck 3.13 --json
+# Run this before your next CI upgrade
+pyupgradecheck 3.14 --json > compat-report.json
 ```
 
 ### Install
