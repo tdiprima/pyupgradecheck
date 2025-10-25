@@ -4,7 +4,7 @@ import time
 
 from halo import Halo
 
-from .checker import check_environment, get_installed_packages
+from .checker import check_environment, get_installed_packages, parse_requirements_file
 
 
 def main():
@@ -14,12 +14,29 @@ def main():
     )
     p.add_argument("target", help="Target Python version (e.g. 3.13)")
     p.add_argument("--packages", "-p", nargs="+", help="Specific packages to check")
+    p.add_argument(
+        "--requirements", "-r", help="Path to requirements.txt file to check"
+    )
     p.add_argument("--json", action="store_true", help="Emit json output")
     args = p.parse_args()
 
+    # Handle mutually exclusive options
+    if args.packages and args.requirements:
+        p.error("Cannot specify both --packages and --requirements")
+
+    # Parse requirements file if provided
+    packages_to_check = None
+    if args.requirements:
+        try:
+            packages_to_check = parse_requirements_file(args.requirements)
+        except FileNotFoundError as e:
+            p.error(str(e))
+    elif args.packages:
+        packages_to_check = args.packages
+
     # Get package count for time estimation
-    if args.packages:
-        num_packages = len(args.packages)
+    if packages_to_check:
+        num_packages = len(packages_to_check)
     else:
         pkgs = get_installed_packages()
         num_packages = len(pkgs)
@@ -43,7 +60,7 @@ def main():
         spinner.start()
 
     start_time = time.time()
-    report = check_environment(args.target, args.packages)
+    report = check_environment(args.target, packages_to_check)
     elapsed_time = time.time() - start_time
 
     if spinner:
