@@ -59,18 +59,24 @@ def main():
         )
         spinner.start()
 
-    start_time = time.time()
-    report = check_environment(args.target, packages_to_check)
-    elapsed_time = time.time() - start_time
+    try:
+        start_time = time.time()
+        report = check_environment(args.target, packages_to_check)
+        elapsed_time = time.time() - start_time
 
-    if spinner:
-        spinner.succeed(f"Completed in {elapsed_time:.1f} seconds")
+        if spinner:
+            spinner.succeed(f"Completed in {elapsed_time:.1f} seconds")
 
-    if args.json:
-        print(json.dumps(report, indent=2))
-    else:
-        for pkg, info in sorted(report.items()):
-            print(f"{pkg} {info['version']}: {info['status']} ({info['details']})")
+        if args.json:
+            print(json.dumps(report, indent=2))
+        else:
+            for pkg, info in sorted(report.items()):
+                print(f"{pkg} {info['version']}: {info['status']} ({info['details']})")
+    except KeyboardInterrupt:
+        if spinner:
+            spinner.fail("Interrupted by user")
+        print("\nOperation cancelled by user.")
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
