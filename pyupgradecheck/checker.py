@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import httpx
@@ -99,6 +101,46 @@ def check_pkg_compatibility(
         pass
     # 3) unknown
     return ("unknown", "no metadata found")
+
+
+def parse_requirements_file(requirements_path: str) -> List[str]:
+    """
+    Parse a requirements.txt file and extract package names.
+    Handles lines like:
+    - requests>=2.0
+    - flask==1.1.2
+    - numpy<1.20
+    - pandas
+    - # comments
+    - git+https://...
+
+    Returns a list of package names (without version specifiers).
+    """
+    packages = []
+    path = Path(requirements_path)
+
+    if not path.exists():
+        raise FileNotFoundError(f"Requirements file not found: {requirements_path}")
+
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+
+            # Skip empty lines and comments
+            if not line or line.startswith("#"):
+                continue
+
+            # Skip git/url dependencies
+            if line.startswith(("git+", "http://", "https://", "-e")):
+                continue
+
+            # Extract package name (everything before version specifiers)
+            # Match package name up to <, >, =, [, or whitespace
+            match = re.match(r"^([a-zA-Z0-9_-]+)", line)
+            if match:
+                packages.append(match.group(1))
+
+    return packages
 
 
 def check_environment(
