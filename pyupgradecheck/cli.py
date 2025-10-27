@@ -3,6 +3,7 @@ import json
 import time
 
 from halo import Halo
+from rich_argparse import RichHelpFormatter
 
 from .checker import check_environment, get_installed_packages, parse_requirements_file
 
@@ -11,6 +12,7 @@ def main():
     p = argparse.ArgumentParser(
         prog="pyupgradecheck",
         description="Check installed packages for Python version compatibility.",
+        formatter_class=RichHelpFormatter,
     )
     p.add_argument("target", help="Target Python version (e.g. 3.13)")
     p.add_argument("--packages", "-p", nargs="+", help="Specific packages to check")

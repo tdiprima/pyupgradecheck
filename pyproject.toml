@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyupgradecheck"
-version = "0.1.7"
+version = "0.1.9"
 description = "Check your installed Python packages for version compatibility"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -13,7 +13,8 @@ license = "MIT"
 dependencies = [
   "packaging",
   "halo",
-  "httpx"
+  "httpx",
+  "rich-argparse"
 ]
 keywords = ["python", "compatibility", "pypi", "upgrade", "cli", "dependency"]
 classifiers = [

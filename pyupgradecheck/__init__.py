@@ -1,4 +1,4 @@
-__version__ = "0.1.7"
+__version__ = "0.1.9"
 
 from .checker import (check_environment, check_pkg_compatibility,
                       get_installed_packages)
