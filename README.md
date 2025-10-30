@@ -60,6 +60,22 @@ pyupgradecheck --help
 Because upgrading Python shouldn't be a trust fall.  
 Quickly see which of your installed packages can handle your target Python version — before you break your dev environment or CI build.
 
+## ⚠️ Disclaimer
+
+`pyupgradecheck` checks **declared compatibility**, not guaranteed runtime behavior.
+
+It uses metadata from PyPI (`requires_python`) and package classifiers
+to estimate whether a library supports your target Python version.
+
+That means:
+
+- Some packages may *say* they support Python 3.13+, but still fail at runtime.
+- C-extension builds, dependency pins, or missing wheels might break your install.
+- Metadata may lag behind reality (maintainers forget to update it).
+
+Always test your environment in a virtualenv before upgrading production systems.
+This tool gives you a **heads-up**, not a promise. 😅
+
 ## ❤️ Contributing
 
 Pull requests welcome 💖  
