@@ -294,6 +294,8 @@ source = { editable = "." }
 dependencies = [
     { name = "halo" },
     { name = "httpx" },
+    { name = "hypothesis", version = "6.141.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "hypothesis", version = "6.142.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "packaging" },
     { name = "rich-argparse" },
 ]
@@ -311,6 +313,7 @@ dev = [
 requires-dist = [
     { name = "halo" },
     { name = "httpx" },
+    { name = "hypothesis", specifier = ">=6.141.1" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.0" },
     { name = "packaging" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
