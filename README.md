@@ -28,25 +28,61 @@ requests 2.32.3: supported (PyPI requires_python: >=3.7)
 some-old-lib 1.2.0: incompatible (PyPI requires_python: <3.10)
 ```
 
-## 🧰 CLI Examples
+## ⚙️ CLI Options Explained
+
+### 🧩 `--packages` / `-p`
+Manually specify one or more packages to check instead of scanning everything installed.
 
 ```bash
-# Check specific packages
-pyupgradecheck 3.14 --packages packaging httpx halo
+pyupgradecheck 3.14 --packages requests pandas httpx
 # or short form:
-pyupgradecheck 3.14 --p packaging httpx halo
+pyupgradecheck 3.14 -p requests pandas httpx
 ```
 
+Useful when you just want to sanity-check a few libs before doing a full environment sweep.
+
+### 📦 `--requirements` / `-r`
+
+Check packages listed in a `requirements.txt` file.
+
 ```bash
-# Check a requirements.txt file
 pyupgradecheck 3.14 --requirements requirements.txt
 # or short form:
 pyupgradecheck 3.14 -r requirements.txt
 ```
 
+Great for CI pipelines or testing a project's dependency file without needing a full virtualenv.
+
+### 💾 `--json`
+
+Emit results in JSON instead of human-readable text.
+
 ```bash
-# Perfect for CI
 pyupgradecheck 3.14 --json > compat-report.json
+```
+
+Perfect for CI/CD jobs or when you want to post-process results with another tool.
+
+### 🧠 `--strict`
+
+Be extra cautious — only marks a package as **supported** if *both* PyPI metadata
+(`requires_python`) **and** package classifiers agree on the target Python version.
+
+```bash
+pyupgradecheck 3.14 --strict
+```
+
+This reduces false positives from packages that *claim* support but might not actually work yet.
+If either data source disagrees or is missing, the status will be `"unknown"`.
+
+### ⚗️ Combo Examples
+
+```bash
+# Check just a few packages, strict mode, JSON output
+pyupgradecheck 3.14 -p fastapi uvicorn pydantic --strict --json
+
+# Check all from requirements.txt, strict mode
+pyupgradecheck 3.14 -r requirements.txt --strict
 ```
 
 ## 💬 CLI Help
@@ -92,3 +128,9 @@ pytest
 * 🧠 Maintainers checking project compatibility
 
 <br>
+
+<!--
+pip install -e ".[dev]"
+pytest tests/test_basic.py -v
+python -m pytest tests/test_basic.py -v --tb=line -k "requirements"
+-->

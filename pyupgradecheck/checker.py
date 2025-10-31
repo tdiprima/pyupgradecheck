@@ -152,4 +152,5 @@ def check_environment(
     for name, ver in pkgs.items():
         status, details, source = check_pkg_compatibility(name, ver, target_python, strict)
         report[name] = {"version": ver, "status": status, "details": details, "source": source}
+        time.sleep(0.05)  # gentle rate limit for PyPI
     return report

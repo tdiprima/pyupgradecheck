@@ -1,0 +1,112 @@
+# Test Requirements File
+# This file tests various requirement formats for pyupgradecheck
+
+# Simple package names (no version specifier)
+requests
+flask
+numpy
+
+# Exact version pins
+pandas==2.0.0
+pytest==7.4.0
+
+# Minimum version requirements
+httpx>=0.24.0
+packaging>=23.0
+
+# Version ranges
+scipy>=1.10.0,<2.0.0
+matplotlib>=3.5.0,<=3.8.0
+
+# Compatible release (tilde-equals)
+django~=4.2.0
+celery~=5.3
+
+# Less than constraints
+pillow<10.0.0
+cryptography<41.0.0
+
+# Not equal constraints (should still extract package name)
+six!=1.11.0,>=1.10.0
+
+# Complex version specifiers
+scikit-learn>=1.0.0,!=1.2.0,<1.4.0
+
+# Comments should be ignored
+# This is a full line comment
+requests-toolbelt  # inline comment here
+
+# Empty lines should be ignored
+
+
+# Package names with hyphens and underscores
+python-dateutil>=2.8.0
+google-auth>=2.0.0
+pytest-cov>=4.0.0
+
+# Git URLs (should be skipped)
+git+https://github.com/user/repo.git
+git+https://github.com/psf/requests.git@main
+git+ssh://git@github.com/user/private-repo.git
+
+# HTTP/HTTPS URLs (should be skipped)
+https://github.com/user/repo/archive/master.zip
+http://example.com/package-1.0.tar.gz
+
+# Editable installs (should be skipped)
+-e .
+-e ./path/to/package
+-e git+https://github.com/user/repo.git#egg=package
+
+# VCS URLs with egg fragments (should be skipped)
+git+https://github.com/django/django.git@stable/4.2.x#egg=Django
+
+# Wheel files (should be skipped)
+https://files.pythonhosted.org/packages/.../package-1.0-py3-none-any.whl
+
+# More simple packages
+rich
+typer
+click
+
+# Packages with extras (should extract base package name)
+requests[security]>=2.25.0
+sqlalchemy[asyncio]==2.0.0
+fastapi[all]~=0.100.0
+
+# Mixed whitespace (should be handled)
+  black
+    isort    >=5.0.0
+
+# Case variations (PyPI is case-insensitive)
+Django
+PILLOW
+NumPy
+
+# Pre-release and development versions
+some-package>=1.0.0a1
+another-package==2.0.0rc1
+
+# Local version identifiers
+setuptools>=65.0.0+local
+
+# Environment markers (should still extract package)
+importlib-metadata>=4.0.0; python_version < "3.8"
+typing-extensions>=4.0.0; python_version < "3.10"
+
+# Multiple constraints with spaces
+beautifulsoup4 >= 4.9.0 , < 5.0.0
+
+# Underscores vs hyphens (both should work)
+python_dateutil
+python-dateutil
+
+# Numbers in package names
+py2neo>=2021.0.0
+html5lib>=1.1
+
+# Single character packages (if they exist)
+z3-solver>=4.8.0
+
+# Very long package names
+this-is-a-very-long-package-name-for-testing>=1.0.0
