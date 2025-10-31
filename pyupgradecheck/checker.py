@@ -17,6 +17,11 @@ from packaging.version import InvalidVersion, Version
 PYPI_JSON_URL = "https://pypi.org/pypi/{pkg}/json"
 
 
+def normalize_package_name(name: str) -> str:
+    """Normalize package name according to PEP 503 (lowercase, replace separators with hyphens)."""
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
 def get_installed_packages() -> Dict[str, str]:
     """Return mapping package_name -> version (from importlib.metadata)."""
     pkgs = {}
@@ -147,7 +152,10 @@ def check_environment(
 ) -> Dict[str, Dict]:
     pkgs = get_installed_packages()
     if packages:
-        pkgs = {k: pkgs.get(k, "unknown") for k in packages}
+        # Create a normalized lookup map from installed packages
+        normalized_pkgs = {normalize_package_name(name): ver for name, ver in pkgs.items()}
+        # Look up requested packages using normalized names
+        pkgs = {k: normalized_pkgs.get(normalize_package_name(k), "unknown") for k in packages}
     report = {}
     for name, ver in pkgs.items():
         status, details, source = check_pkg_compatibility(name, ver, target_python, strict)

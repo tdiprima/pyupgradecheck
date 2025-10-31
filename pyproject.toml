@@ -14,7 +14,7 @@ dependencies = [
   "packaging",
   "halo",
   "httpx",
-  "rich-argparse"
+  "rich-argparse",
 ]
 keywords = ["python", "compatibility", "pypi", "upgrade", "cli", "dependency"]
 classifiers = [
